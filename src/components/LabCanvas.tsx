@@ -111,12 +111,21 @@ function drawAgent(ctx: CanvasRenderingContext2D, agent: any): void {
       color = '#06B6D4';
   }
 
-  // Draw glow
-  ctx.shadowBlur = 15;
+  // Draw outer glow (softer, larger)
+  ctx.shadowBlur = 20;
   ctx.shadowColor = color;
 
-  // Draw agent body
+  // Draw agent body with smooth edges
   ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(agent.x, agent.y, 8, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Add inner highlight for depth
+  const gradient = ctx.createRadialGradient(agent.x - 2, agent.y - 2, 0, agent.x, agent.y, 8);
+  gradient.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+  gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = gradient;
   ctx.beginPath();
   ctx.arc(agent.x, agent.y, 8, 0, Math.PI * 2);
   ctx.fill();
@@ -124,17 +133,26 @@ function drawAgent(ctx: CanvasRenderingContext2D, agent: any): void {
   // Reset shadow
   ctx.shadowBlur = 0;
 
-  // Draw direction indicator (small line showing movement)
+  // Draw smooth direction indicator with trail effect
   const dx = agent.targetX - agent.x;
   const dy = agent.targetY - agent.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
   
   if (distance > 5) {
-    const dirX = (dx / distance) * 15;
-    const dirY = (dy / distance) * 15;
+    const dirX = (dx / distance) * 20;
+    const dirY = (dy / distance) * 20;
     
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
+    // Draw trail with gradient
+    const trailGradient = ctx.createLinearGradient(
+      agent.x, agent.y,
+      agent.x + dirX, agent.y + dirY
+    );
+    trailGradient.addColorStop(0, color);
+    trailGradient.addColorStop(1, `${color}00`); // Transparent
+    
+    ctx.strokeStyle = trailGradient;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(agent.x, agent.y);
     ctx.lineTo(agent.x + dirX, agent.y + dirY);

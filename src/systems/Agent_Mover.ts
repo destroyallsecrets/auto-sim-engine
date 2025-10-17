@@ -24,6 +24,7 @@ class Agent_MoverClass {
 
   /**
    * Update a single agent's position and state
+   * Uses smooth interpolation for natural movement
    */
   private updateSingleAgent(agent: Agent): Agent {
     const dx = agent.targetX - agent.x;
@@ -31,7 +32,7 @@ class Agent_MoverClass {
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     // Agent reached target - assign new random target
-    if (distance < 5) {
+    if (distance < 3) {
       return {
         ...agent,
         x: agent.targetX,
@@ -42,9 +43,13 @@ class Agent_MoverClass {
       };
     }
 
-    // Move towards target
-    const moveX = (dx / distance) * agent.speed;
-    const moveY = (dy / distance) * agent.speed;
+    // Smooth easing - slower when close to target, faster when far
+    const easingFactor = Math.min(distance / 100, 1); // Normalize distance
+    const smoothSpeed = agent.speed * (0.5 + easingFactor * 1.5); // Variable speed
+    
+    // Interpolated movement with easing
+    const moveX = (dx / distance) * smoothSpeed;
+    const moveY = (dy / distance) * smoothSpeed;
 
     return {
       ...agent,

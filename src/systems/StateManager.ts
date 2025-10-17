@@ -64,9 +64,9 @@ class StateManagerClass {
       money: 100,
       fame: 50,
       agents: [
-        { id: 'agent-1', x: 100, y: 100, targetX: 100, targetY: 100, state: 'pacing', speed: 2 },
-        { id: 'agent-2', x: 300, y: 150, targetX: 300, targetY: 150, state: 'pacing', speed: 2 },
-        { id: 'agent-3', x: 500, y: 100, targetX: 500, targetY: 100, state: 'pacing', speed: 2 }
+        { id: 'agent-1', x: 100, y: 100, targetX: 100, targetY: 100, state: 'pacing', speed: 3 },
+        { id: 'agent-2', x: 300, y: 150, targetX: 300, targetY: 150, state: 'pacing', speed: 2.5 },
+        { id: 'agent-3', x: 500, y: 100, targetX: 500, targetY: 100, state: 'pacing', speed: 3.5 }
       ],
       activeAction: null,
       actionHistory: [],
